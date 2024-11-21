@@ -1,0 +1,721 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Project 5: Fun With Diffusion Models!</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1450aaf5-eccb-80cd-9492-e1972e70d39a" class="page sans"><header><h1 class="page-title">Project 5: <strong>Fun With Diffusion Models!</strong></h1><p class="page-description"></p></header><div class="page-body"><h2 id="1450aaf5-eccb-8093-9aa7-ec0a2eb8f0d9" class="">Part A</h2><h3 id="1450aaf5-eccb-8032-a5e3-f810547eed1e" class="">Part 0: Setup</h3><p id="1450aaf5-eccb-806e-8145-e8b437efc873" class="">For this part of the project, we will be using the <a href="https://huggingface.co/docs/diffusers/api/pipelines/deepfloyd_if">DeepFloyd IF</a> two-stage diffusion model trained by Stability AI. Let’s start by looking at what the output of a diffusion model is, specifically looking at how the number of denoising steps affects its output.</p><figure id="1450aaf5-eccb-8003-ae76-f99e6f6cdc89" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.11.32_PM.png"><img style="width:707.984375px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.11.32_PM.png"/></a></figure><figure id="1450aaf5-eccb-8033-93c0-de5d26f3d270" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.12.03_PM.png"><img style="width:707.9921875px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.12.03_PM.png"/></a></figure><figure id="1450aaf5-eccb-80a2-8b64-eecb680cf4f0" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.12.17_PM.png"><img style="width:707.9765625px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.12.17_PM.png"/></a></figure><p id="1450aaf5-eccb-80ac-9fcd-e86c11103d03" class="">In the above images, the rows use <code>num_inference_steps</code> values of 20, 1, and 100 respectively. As you can see, the difference in output between values of 1 and 20 is vastly different as we are only left with noise in the case of 1. However, the difference between 20 and 100 is less apparent even though the difference in the number of steps is greater. One difference to note is in the snowy mountain village, where we see the lights in the houses appear much more detailed in the case of 100. In other words, we are seeing the model reach an asymptote in performance and quality after a certain number of steps. The random seed used for this part of the project is 180.</p><h3 id="1450aaf5-eccb-8059-ab36-ed0a8c0445b9" class="">Part 1: Sampling Loops</h3><p id="1450aaf5-eccb-80e2-b03f-c73164cdf373" class="">We start playing with diffusion models by creating our own sampling loops to generate high quality images!</p><p id="1450aaf5-eccb-801a-96df-d3bd4d6d3d9a" class=""><strong>1.1 Implementing the Forward Process</strong></p><p id="1450aaf5-eccb-80c6-821e-f7a68f3428a4" class="">To implement any sort of denoising model, we need to start by actually creating a way to introduce noise into our images. We will be implementing the forward function which takes an image and time as input. The time indicating how much noise we want to introduce into the image (value of t=0 is equivalent to the original image).</p><figure id="1450aaf5-eccb-8077-86e9-f6e718b8b57b" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/image.png"><img style="width:144px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/image.png"/></a></figure><p id="1450aaf5-eccb-808f-8c8d-c4ef16acbd9a" class="">We will be using the listed picture of the campanile (much lower resolution than the one above) to tackle a few cool aspects of diffusion models. To implement the forward process, we will look to the following equation that describes a weighted average of noise and the original image.</p><figure id="1450aaf5-eccb-80c7-a3a2-db19ae0632e8" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.43.25_PM.png"><img style="width:384px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.43.25_PM.png"/></a></figure><p id="1450aaf5-eccb-80ec-b0f0-e6ff865ab922" class="">Below are images of the campanile with more and more noise introduced as t increases.</p><div id="1450aaf5-eccb-8043-8020-cfc9776b232f" class="column-list"><div id="1450aaf5-eccb-80c9-9920-db0b55b28c92" style="width:25%" class="column"><figure id="1450aaf5-eccb-8029-ad6e-e620b4becab3" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.14_PM.png"><img style="width:130px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.14_PM.png"/></a></figure></div><div id="1450aaf5-eccb-8017-96ab-d6e139ea8d6c" style="width:25%" class="column"><figure id="1450aaf5-eccb-8065-a655-ec3126a0e7c7" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.30_PM.png"><img style="width:134px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.30_PM.png"/></a></figure></div><div id="1450aaf5-eccb-80e2-bd33-feb35070a96d" style="width:25%" class="column"><figure id="1450aaf5-eccb-8053-87f2-f1093f4dd039" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.52_PM.png"><img style="width:130px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.52_PM.png"/></a></figure></div><div id="1450aaf5-eccb-802d-9014-ee3cdc6095aa" style="width:25%" class="column"><figure id="1450aaf5-eccb-808b-89be-debf1bc4fa6f" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.34.09_PM.png"><img style="width:132px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.34.09_PM.png"/></a></figure></div></div><p id="1450aaf5-eccb-80f8-ad40-f15bd7f1b552" class="">The leftmost image is the original image that we are starting with followed by t = 250, 500, and 700 for the rest of the images.</p><p id="1450aaf5-eccb-8091-ab44-fe85d67a57ad" class=""><strong>1.2 Classical Denoising</strong></p><p id="1450aaf5-eccb-80b8-829d-e470cb58bf49" class="">Now that we have a way to introduce noise into our images, we want to be able to de-noise them to recover a more complete image. The classical approach to this is to apply gaussian blurring as an attempt to remove noise.</p><div id="1450aaf5-eccb-80e9-ad60-d2692131bdb4" class="column-list"><div id="1450aaf5-eccb-80bd-ba5c-f4a80bfa1826" style="width:25%" class="column"><figure id="1450aaf5-eccb-80ce-9cd9-fcd1c3dcc567" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.14_PM.png"><img style="width:130px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.14_PM.png"/></a></figure></div><div id="1450aaf5-eccb-804c-8d9c-f96320ac34d2" style="width:25%" class="column"><figure id="1450aaf5-eccb-805b-9355-d66656f251e8" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.36.02_PM.png"><img style="width:130px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.36.02_PM.png"/></a></figure></div><div id="1450aaf5-eccb-804a-a8e6-e3bdd88a8aab" style="width:25%" class="column"><figure id="1450aaf5-eccb-807b-b93f-e67e74d21de7" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.36.31_PM.png"><img style="width:130px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.36.31_PM.png"/></a></figure></div><div id="1450aaf5-eccb-806e-b822-e0ac8ef484e1" style="width:25%" class="column"><figure id="1450aaf5-eccb-803b-a613-f58cd0be0d2f" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.37.02_PM.png"><img style="width:132px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.37.02_PM.png"/></a></figure></div></div><p id="1450aaf5-eccb-8032-a6dd-cce2114b3a64" class="">Again, we have the original image on the left followed by each of the gaussian blurred images for t = 250, 500, and 700. We can clearly still see the noise present in our images even after applying the blur, all the most apparent in images with larger values for t. We need to find a different way of approaching this using diffusion models.</p><p id="1450aaf5-eccb-8010-b3f9-de8c764580e1" class=""><strong>1.3 One-Step Denoising</strong></p><p id="1450aaf5-eccb-8096-b57d-d6fcd8a6add8" class="">The approach to one-step denoising is to feed our noisy image and time step directly into our model and take the output to be the “de-noised” image. How we actually calculate the clean image is by rearranging the forward equation solving for x0. In this case, the UNet will output a noise estimate for the noisy image given the image and a time step.</p><div id="1450aaf5-eccb-8063-bef5-d0affcf2c944" class="column-list"><div id="1450aaf5-eccb-80e7-a644-ef0c6b0b0518" style="width:33.333333333333336%" class="column"><figure id="1450aaf5-eccb-80d4-ae28-db41c8ac493d" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.30_PM.png"><img style="width:134px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.30_PM.png"/></a></figure></div><div id="1450aaf5-eccb-80dd-937b-dbd5326686fd" style="width:33.333333333333336%" class="column"><figure id="1450aaf5-eccb-8031-acee-c96dd7e44da0" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.52_PM.png"><img style="width:130px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.52_PM.png"/></a></figure></div><div id="1450aaf5-eccb-803b-927a-e2de20826041" style="width:33.33333333333333%" class="column"><figure id="1450aaf5-eccb-8071-b244-edb327e63682" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.34.09_PM.png"><img style="width:132px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.34.09_PM.png"/></a></figure></div></div><div id="1450aaf5-eccb-802b-a82f-e979b18d49b6" class="column-list"><div id="1450aaf5-eccb-804b-bad6-c84e64932727" style="width:33.333333333333336%" class="column"><figure id="1450aaf5-eccb-8064-a0f5-f4b81cbd2eb1" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.39.57_PM.png"><img style="width:132px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.39.57_PM.png"/></a></figure></div><div id="1450aaf5-eccb-802d-83dc-cc7609f7dc1c" style="width:33.333333333333336%" class="column"><figure id="1450aaf5-eccb-801c-9406-c9ec5331b62b" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.40.09_PM.png"><img style="width:132px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.40.09_PM.png"/></a></figure></div><div id="1450aaf5-eccb-8098-bb15-c05c234f0ccf" style="width:33.33333333333333%" class="column"><figure id="1450aaf5-eccb-8038-aa19-e3192f82b447" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.40.21_PM.png"><img style="width:132px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.40.21_PM.png"/></a></figure></div></div><figure id="1450aaf5-eccb-80c3-9b0a-d90af9286835" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.14_PM.png"><img style="width:144px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_9.33.14_PM.png"/></a></figure><p id="1450aaf5-eccb-801d-aa12-e40abf43ff41" class="">Here, we have the same time steps, but are comparing the one-step denoising output to the noisy images. We can see a visible difference where the noise has been removed from the output. In other words, the UNet was able to correctly determine the amount of noise in the image, allowing us to apply the inverse of the forward equation to get an image that somewhat resembles the original. In the case of t = 250, the image is very close to the original shown at the bottom of the grid. In the t = 750 case, the campanile looks very blurred but is still visible to some extent in comparison to our classical method.</p><p id="1450aaf5-eccb-8071-ba75-e1888995d03f" class=""><strong>1.4 Iterative Denoising</strong></p><p id="1450aaf5-eccb-809b-a1be-e22b99030d60" class="">One step up from one-step denoising is iterative denoising. The idea here is to have a list of time steps that describe of all of the discrete noise states that a certain image can be in. Since our goal is again finding an estimate for x0, we can work our way from the largest time step down to the 0th. Instead of jumping all of the way in one step, we can write an equation for the (t-1)-th image in terms of the t-th image. However, this would be far too slow for our process, we we can introduce a stride where we can write the image of some t’ time step in terms of the image at the t-th time step.</p><figure id="1450aaf5-eccb-80ee-9d6c-f71fcba114f1" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.02.14_PM.png"><img style="width:384px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.02.14_PM.png"/></a></figure><p id="1450aaf5-eccb-8016-98ed-cf2a44d21c3c" class="">The alpha and beta values are calculated and variance is derived from the output of the UNet noise predication. </p><figure id="1450aaf5-eccb-8001-846d-e90ceca999bf" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.07.04_PM.png"><img style="width:707.9921875px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.07.04_PM.png"/></a></figure><p id="1450aaf5-eccb-8070-b96d-cad46674ffa1" class="">In order, the images above are (1) the original campanile, (2) noisy image of the companile at t = 750, (3) classical denoising image, (4) one-step denoising output, and finally (5) the iterative denoising output. The last image looks significantly better than the previous two methods at most if not all time steps.</p><p id="1450aaf5-eccb-80f7-9a40-da2dfdd82dd2" class=""><strong>1.5 Diffusion Model Sampling</strong></p><p id="1450aaf5-eccb-8073-957b-fb948342223c" class="">Now that we have looked at the UNet’s denoising abilities, we can take a look at some other cool aspects of the model. We were using a predefined noisy image in the previous parts that was based on the original campanile image. But, what if we started with complete random noise? Well, the model will actually generate a variety of different images when given a random starting point. Below are five images generated from the diffusion model after using the prompt &quot;a high quality photo”.</p><figure id="1450aaf5-eccb-80ed-bed8-ded636edd917" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.10.38_PM.png"><img style="width:672px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.10.38_PM.png"/></a></figure><p id="1450aaf5-eccb-80a2-ae14-ea4863f7a76e" class="">
+</p><p id="1450aaf5-eccb-8002-a219-c96ecfa2d9cd" class=""><strong>1.6 Classifier-Free Guidance (CFG)</strong></p><p id="1450aaf5-eccb-80ad-b530-ce299b5ffe70" class="">While this is really cool, the quality of the images we got wasn’t the best, and sometimes results in nonsensical imagery. To combat this, we can implement an algorithm called Classifier-Free Guidance (CFG). CFG utilizes this concept of unconditional input, so where we prompted an embedding model with &quot;a high quality photo” before, we would instead input “”. We can combine the outputs of the two UNet responses by the following approach.</p><figure id="1450aaf5-eccb-801a-a63d-da5676dc25ba" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.16.12_PM.png"><img style="width:192px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.16.12_PM.png"/></a></figure><p id="1450aaf5-eccb-807b-b70c-f66e599b8383" class="">With this setup along with the iterative denoising from the previous step, we get the following images.</p><figure id="1450aaf5-eccb-8048-957d-d2e5d76e45e0" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.17.06_PM.png"><img style="width:678px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.17.06_PM.png"/></a></figure><p id="1450aaf5-eccb-8051-8c1d-f75356495735" class="">Overall, the quality and direction of these images are much higher and more clear. We can use this tool to do some pretty cool things with diffusion models!</p><p id="1450aaf5-eccb-80bb-8707-f1a8591a8645" class=""><strong>1.7 Image-to-image Translation</strong></p><p id="1450aaf5-eccb-80b3-9179-fd043d8107d8" class="">So far, we have applied noise to the images in only one way, but what if we try applying different amount of noise and then forcing the images through the denoising process. Depending on the amount of noise, we can control how much we want the image to change, altered by the diffusion model to introduce new aspects that weren’t present.</p><figure id="1450aaf5-eccb-8051-91df-fc20c8c02817" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.21.12_PM.png"><img style="width:720px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.21.12_PM.png"/></a></figure><p id="1450aaf5-eccb-8073-b96c-d11b40ef34b5" class="">Here, we have this principle applied to our campanile where we are applying different levels of noise to see the progression of the diffusion model’s output. We can slowly see the features of the campanile break through as we go from left to right, followed by the original campanile furthest to the right.</p><p id="1450aaf5-eccb-80cd-943f-f9fb3b1a1030" class="">Let’s apply this process to two other images!</p><div id="1450aaf5-eccb-805f-92d3-d87d1e78b7fa" class="column-list"><div id="1450aaf5-eccb-8048-b7a7-e30ead072cde" style="width:50%" class="column"><figure id="1450aaf5-eccb-80ce-8c78-f04197bff87f" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.24.20_PM.png"><img style="width:136px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.24.20_PM.png"/></a></figure></div><div id="1450aaf5-eccb-80dc-84cf-eee5ce3d0e60" style="width:50%" class="column"><figure id="1450aaf5-eccb-8086-9d10-c0b3b2bf777d" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.24.43_PM.png"><img style="width:132px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.24.43_PM.png"/></a></figure></div></div><p id="1450aaf5-eccb-80f3-a857-ced6e8ab9664" class="">For my images, I opted to generate some random images to see how the model would do generally on any image.</p><figure id="1450aaf5-eccb-80b2-b811-f90160c35e48" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.25.58_PM.png"><img style="width:707.9375px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.25.58_PM.png"/></a></figure><figure id="1450aaf5-eccb-8064-b48c-e02888d64163" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.26.17_PM.png"><img style="width:707.9765625px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.26.17_PM.png"/></a></figure><p id="1450aaf5-eccb-806c-8d2b-c346e3cdfafa" class="">Something to note here, is that different images seem to have different convergence points for their progression. Especially for the large image of a tower, we see that the model isn’t able to truly capture what is actually happening in the image until the last step in this sequence for a <code>i_start</code> value of 20.</p><p id="1450aaf5-eccb-80a7-8753-f2cd5311588e" class=""><strong>1.7.1 Editing Hand-Drawn and Web Images</strong></p><p id="1450aaf5-eccb-8021-af1a-e37f1a3858bf" class="">Let’s extend this idea to to other images that we can find on the web and even some images that we draw on our own!</p><figure id="1450aaf5-eccb-80e8-867f-e631850b0dca" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.28.23_PM.png"><img style="width:136px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.28.23_PM.png"/></a></figure><p id="1450aaf5-eccb-80c6-8f14-d30f0a2bcdaf" class="">
+</p><figure id="1450aaf5-eccb-80e4-b1ff-ee27e7855cdf" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.30.14_PM.png"><img style="width:707.984375px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.30.14_PM.png"/></a></figure><p id="1450aaf5-eccb-80ac-a597-fa7e54b8a303" class="">
+</p><p id="1450aaf5-eccb-8073-a33d-feda38f09091" class="">For this web image, we see the model really struggle to pin down what exactly is present in the image. As a result, we see a lot of fluctuation for the subjects in the images; however, the color palette is consistent throughout. In the end, the model is able to jump to an image that is very similar to the original (i = 20).</p><p id="1450aaf5-eccb-80b1-9b20-fa0e4399ff71" class="">
+</p><p id="1450aaf5-eccb-806c-8ed8-c2c29a6fdf50" class="">We can also apply this to hand-drawn images! I drew the following two images representing two of my favorite basketball players: Steph Curry and Michael Jordan. I drew Steph Curry’s jersey and a pair of Jordan shoes below, shooting to include as many unique features and colors into my images.</p><p id="1450aaf5-eccb-8067-aa00-c3f6bd5b2eee" class="">
+</p><div id="1450aaf5-eccb-809a-ae08-e3cd04950df7" class="column-list"><div id="1450aaf5-eccb-80be-b675-d9644e03092b" style="width:50%" class="column"><figure id="1450aaf5-eccb-8056-bd1a-f32b50c119f8" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.28.45_PM.png"><img style="width:132px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.28.45_PM.png"/></a></figure></div><div id="1450aaf5-eccb-80b5-b212-c3c26268e6cc" style="width:50%" class="column"><figure id="1450aaf5-eccb-8052-a91b-fa3c8b69955d" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.33.46_PM.png"><img style="width:142px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.33.46_PM.png"/></a></figure></div></div><p id="1450aaf5-eccb-80d6-b78d-fa74535d1055" class="">The progression for each of these images follows a very similar sequence as the coffee example above, implying these images must take longer to converge to something that matches the original. In both of these examples, however, we see that at i = 10, that the model was able to capture a lot about the colors and shape of the original objects.</p><figure id="1450aaf5-eccb-809f-8b5c-ccce167dde4b" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.29.31_PM.png"><img style="width:707.9609375px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.29.31_PM.png"/></a></figure><p id="1450aaf5-eccb-8040-a1e8-ca70e6da7589" class="">
+</p><figure id="1450aaf5-eccb-803c-9bc7-ef40ca5ccae8" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.35.26_PM.png"><img style="width:707.9609375px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.35.26_PM.png"/></a></figure><p id="1450aaf5-eccb-808d-9afa-e2ba9e256aa9" class="">
+</p><p id="1450aaf5-eccb-8009-b3d7-c193a822db12" class=""><strong>1.7.2 Inpainting</strong></p><p id="1450aaf5-eccb-8067-ac42-f7186e9db29d" class="">Inpainting is a really cool application of the previous explored topics since we are able to replace specific parts of an image with whatever the model thinks would fit. Looking at our image of a campanile again, </p><figure id="1450aaf5-eccb-80c6-87c6-e101f7ef608d" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.36.41_PM.png"><img style="width:418px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.36.41_PM.png"/></a></figure><p id="1450aaf5-eccb-805b-b2f6-d7745ff193f0" class="">After running our CFG denoising algorithm from before, we can get various different outputs, but here is one output.</p><figure id="1450aaf5-eccb-8009-a804-f64650e7b877" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.40.09_PM.png"><img style="width:136px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.40.09_PM.png"/></a></figure><p id="1450aaf5-eccb-8002-aa8d-f015be204565" class="">It seems to have replaced the top of the campanile with a lighthouse or a watch tower of sorts. Outside of the campanile, let’s look at other images where we can in paint. The following example is an album cover for Frank Ocean’s work, Blond.</p><figure id="1450aaf5-eccb-8020-8b95-df634496db75" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.46.36_AM.png"><img style="width:434px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.46.36_AM.png"/></a></figure><p id="1450aaf5-eccb-8077-a881-f10e1aa51c81" class="">After running our CFG denoising algorithm for mutiple iterations, I landed upon:</p><figure id="1450aaf5-eccb-8003-89a6-f5f3de1dc964" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.53.21_AM.png"><img style="width:240px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.53.21_AM.png"/></a></figure><p id="1450aaf5-eccb-80e9-90e5-caad026d7168" class="">An interesting fact is that for the majority of the generations I did, the model always seemed to change the pose of the subject to be facing forward, and also making changes outside of the area to edit. Next, we look at another album cover, this time from Kanye West for his newer album, Vultures 2.</p><figure id="1450aaf5-eccb-80cb-a0b7-fb43e1e304cf" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.47.57_AM.png"><img style="width:426px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.47.57_AM.png"/></a></figure><p id="1450aaf5-eccb-805b-8bf0-e11d0efe7601" class="">
+</p><figure id="1450aaf5-eccb-8093-abb6-cc2e4ac2690c" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.48.12_AM.png"><img style="width:192px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.48.12_AM.png"/></a></figure><p id="1450aaf5-eccb-801e-8020-f455a7ced247" class="">I felt that this in-paint was very comical and unexpected as the photo has a darker or more mysterious vibe. The in-paint completely changes that aspect for the image, which I found to be interesting for the model. </p><p id="1450aaf5-eccb-801c-b6f7-c5f2256ff115" class=""><strong>1.7.3 Text-Conditional Image-to-image Translation</strong></p><p id="1450aaf5-eccb-8094-be05-d27ec8c7bcdc" class="">So far, we have stuck to using the “a high quality photo” prompt for the language input, but we can enable a sort of image-to-image translation by using a variety of different prompts with a respective embedding model.</p><figure id="1450aaf5-eccb-80a5-8b35-c64719ba53dd" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.43.10_PM.png"><img style="width:707.9609375px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.43.10_PM.png"/></a></figure><p id="1450aaf5-eccb-8089-a70a-f1b20d3602d0" class="">Here, our prompt with “a rocket ship”, so for earlier starting points, we only see a rocket shep, but as you progress to the right, we see the rocket slowly transform into the shape of a building and then actually comes close to the campanile at the end. Let’s look at a few other examples of image-to-image translations.</p><p id="1450aaf5-eccb-80da-b348-e5c1a6096186" class="">Music has always played a big part in my life, so I wanted to create homage to some of my favorite albums, IGOR and Melodic Blue.</p><div id="1450aaf5-eccb-80a2-82b4-fb232fb2dc35" class="column-list"><div id="1450aaf5-eccb-80d6-a6ee-ede8067e9570" style="width:50%" class="column"><figure id="1450aaf5-eccb-8007-ae70-c016a7913e82" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.34.31_AM.png"><img style="width:140px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.34.31_AM.png"/></a></figure></div><div id="1450aaf5-eccb-807b-9b63-e455cb5cf0b5" style="width:50%" class="column"><figure id="1450aaf5-eccb-80c2-a840-ea69d3d75f22" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.34.47_AM.png"><img style="width:136px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.34.47_AM.png"/></a></figure></div></div><p id="1450aaf5-eccb-80d1-bcf6-d998818805a1" class="">The Image-to-Image Translations for each of the images is below. The prompts used for each sequence are “a man with a hat” and “a pencil”</p><figure id="1450aaf5-eccb-8060-9ead-ec01938839da" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.35.41_AM.png"><img style="width:707.96875px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.35.41_AM.png"/></a></figure><figure id="1450aaf5-eccb-80fa-a5c1-db2f3feb5e7a" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.37.01_AM.png"><img style="width:707.953125px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_2.37.01_AM.png"/></a></figure><p id="1450aaf5-eccb-8071-b663-f78b9595894d" class="">
+</p><p id="1450aaf5-eccb-802c-a1f1-f055f3fe1cd3" class=""><strong>1.8 Visual Anagrams</strong></p><p id="1450aaf5-eccb-8068-a3b6-c6f5dd332f55" class="">Diffusion models can generate almost anything imaginable, so we can do some cool things with the sampling process to get very specific results. One cool trick we can apply is creating visual anagrams, where we can flip and image and see a completely different picture! </p><p id="1450aaf5-eccb-80c0-81f0-e0b193c34f82" class="">We can take advantage of our UNet model outputs by conditioning it on two different prompts instead of just one that we have been doing so far. In this case, we will follow the same CFG denoising process but add another noise_estimate, this time for our second prompt. In this case, we want to be able to flip the images 180 degrees and see this other visual prompt, so we can flip our current image in our iterative loop and feed it into the UNet conditioned on the second prompt. We can aggregate the noise estimates of both UNet outputs by flipping the second estimate back and then take a weighted sum. The results for a couple of prompt pairings are shown below.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1450aaf5-eccb-80e6-a943-c765983417ee" class="code"><code class="language-Plain Text">prompts = [
+    &#x27;an oil painting of people around a campfire&#x27;,
+    &#x27;an oil painting of an old man&#x27;
+]</code></pre><div id="1450aaf5-eccb-802f-b021-f2f996058855" class="column-list"><div id="1450aaf5-eccb-80bb-956b-fff536bf7851" style="width:50%" class="column"><figure id="1450aaf5-eccb-80ee-bf79-fff0c8149914" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.52.25_PM.png"><img style="width:136px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.52.25_PM.png"/></a></figure></div><div id="1450aaf5-eccb-80fb-bfa9-e20c7d2f1522" style="width:50%" class="column"><figure id="1450aaf5-eccb-80d9-846f-f8392c77c1d5" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.52.37_PM.png"><img style="width:140px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.52.37_PM.png"/></a></figure></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1450aaf5-eccb-8003-b079-e07be528a387" class="code"><code class="language-Plain Text">prompts = [
+    &#x27;a photo of the amalfi cost&#x27;,
+    &#x27;a photo of a dog&#x27;
+]</code></pre><div id="1450aaf5-eccb-801e-9b07-f2a05599742c" class="column-list"><div id="1450aaf5-eccb-80b6-af0f-d914778bb9e4" style="width:50%" class="column"><figure id="1450aaf5-eccb-8002-976f-d3e9bcafa2a9" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.53.34_PM.png"><img style="width:136px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.53.34_PM.png"/></a></figure></div><div id="1450aaf5-eccb-8023-8aab-f49708eaf176" style="width:50%" class="column"><figure id="1450aaf5-eccb-8058-9de8-f19b49c6a011" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.53.45_PM.png"><img style="width:140px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.53.45_PM.png"/></a></figure></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1450aaf5-eccb-8024-bca7-e01c5f245d60" class="code"><code class="language-Plain Text">prompts = [
+    &#x27;an oil painting of a snowy mountain village&#x27;,
+    &#x27;a lithograph of a skull&#x27;
+]</code></pre><div id="1450aaf5-eccb-802d-8ce4-c6fe75fc8b79" class="column-list"><div id="1450aaf5-eccb-800a-9ebd-c5e8acf0a1b8" style="width:50%" class="column"><figure id="1450aaf5-eccb-8076-83ff-e267f2ec4411" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.57.26_PM.png"><img style="width:144px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.57.26_PM.png"/></a></figure></div><div id="1450aaf5-eccb-809e-b06f-ec7ee33b3880" style="width:50%" class="column"><figure id="1450aaf5-eccb-80af-baef-ee67624cac70" class="image" style="text-align:center"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.54.42_PM.png"><img style="width:130px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.54.42_PM.png"/></a></figure></div></div><p id="1450aaf5-eccb-8050-bfa9-f371b674c5e8" class="">
+</p><p id="1450aaf5-eccb-80a7-b662-f4725e655a31" class=""><strong>1.9 Hybrid Images</strong></p><p id="1450aaf5-eccb-8056-9b6f-c98e4bfccb94" class="">Another cool extension of using two prompts is creating a hybrid image where we can see one image from up close and a completely different one from far away. The way we aggregate the estimate values is what changes since we want to take the high frequencies of one and add them to the low frequencies of the other estimate. Examples of hybrid images are shown below.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1450aaf5-eccb-80fd-a7cc-dacb9ed50e75" class="code"><code class="language-Plain Text">prompts = [
+    &#x27;a lithograph of a skull&#x27;,
+    &#x27;a lithograph of waterfalls&#x27;
+]</code></pre><figure id="1450aaf5-eccb-8024-9296-e7e477607015" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.58.10_PM.png"><img style="width:134px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.58.10_PM.png"/></a></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1450aaf5-eccb-80d6-a1a1-fa74738e9a4b" class="code"><code class="language-Plain Text">prompts = [
+    &#x27;an oil painting of an old man&#x27;,
+    &#x27;an oil painting of a snowy mountain village&#x27;
+]</code></pre><figure id="1450aaf5-eccb-80da-a4ff-cf46d70be57e" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.58.58_PM.png"><img style="width:138px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.58.58_PM.png"/></a></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1450aaf5-eccb-8026-819c-c4ac4f9ba6d2" class="code"><code class="language-Plain Text">prompts = [
+    &#x27;a rocket ship&#x27;,
+    &#x27;a photo of the amalfi cost&#x27;
+]</code></pre><figure id="1450aaf5-eccb-8076-b5dc-ec4bfc5672d5" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.59.30_PM.png"><img style="width:144px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_10.59.30_PM.png"/></a></figure><p id="1450aaf5-eccb-8002-8d00-e37f6eceaa59" class="">
+</p><h2 id="1450aaf5-eccb-803e-b6b3-c5ab372a1a84" class="">Part B</h2><p id="1450aaf5-eccb-8076-a18c-fe7b28600a59" class="">The second part of this project will focus on building and training our own UNet model using PyTorch!</p><h3 id="1450aaf5-eccb-8065-83ee-c2be241c3980" class=""><strong>Part 1: Training a Single-Step Denoising UNet</strong></h3><p id="1450aaf5-eccb-8063-880e-ee3e7b798bfb" class=""><strong>1.1 Implementing the UNet</strong></p><p id="1450aaf5-eccb-809b-a18e-e8b2e70daf19" class="">To do any of the cool things we did in the previous part, we need to understand and implement the UNet architecture so that we can perform denoising. The following image shows a very simple 2 stage UNet where we are convolving our image down into some latent space and then upscaling back to the original size to derive our output. For this process, we will be utilizing the MNIST dataset, which is why an example is shown in the diagram.</p><figure id="1450aaf5-eccb-805d-9960-ee502dd5c7bf" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.00.46_PM.png"><img style="width:2240px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.00.46_PM.png"/></a></figure><p id="1450aaf5-eccb-8095-9c64-f9d8682c7629" class="">
+</p><p id="1450aaf5-eccb-8098-a838-ca070237c626" class=""><strong>1.2 Using the UNet to Train a Denoiser</strong></p><p id="1450aaf5-eccb-8047-a482-f0af46eb9c9a" class="">Given that we will need to train the model, we need a loss function to actually quantify how good the outputs of the model are. In this case, we will be using an MSE loss to find the L2 difference between our target and predicted outputs.</p><figure id="1450aaf5-eccb-80e0-8163-ed76df5ad503" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.23.16_PM.png"><img style="width:192px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.23.16_PM.png"/></a></figure><p id="1450aaf5-eccb-802c-b1c9-f02d2c713261" class="">How are we planning on applying noise to our images? We will use the following equation with different values of sigma to get different outputs (similar to our function from Part A).</p><figure id="1450aaf5-eccb-80bf-a225-df9358c495c9" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.26.55_PM.png"><img style="width:240px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.26.55_PM.png"/></a></figure><p id="1450aaf5-eccb-800d-8a0d-e60c1ff54a45" class="">Here is sample output for different values of sigma across various example images.</p><figure id="1450aaf5-eccb-80c5-a18b-f2e413cdf265" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.30.16_PM.png"><img style="width:707.9296875px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.30.16_PM.png"/></a></figure><figure id="1450aaf5-eccb-80b2-903e-dde6c77e698f" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.29.43_PM.png"><img style="width:707.9921875px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.29.43_PM.png"/></a></figure><p id="1450aaf5-eccb-8045-8b41-ec0402ca53cb" class="">From left to right, the sigma values are 0, 0.2, 0.4, 0.6, 0.8, and 1.0. As expected,, we can slowly see the numbers fade as we go to the right.</p><p id="1450aaf5-eccb-80e3-bae1-ee7cfd5b2efe" class=""><strong>1.2.1 Training</strong></p><p id="1450aaf5-eccb-80e7-b087-cd142a9aa789" class="">For our first model, we will train the UNet on images with sigma = 0.5 to see if it can successfull de-noise the input. Our dataloaders have a batch size of 256. The UNet model has a hidden dimension of 128, trained over 5 epochs to yield the following training loss.</p><figure id="1450aaf5-eccb-80b9-9e95-c1c95696ee7a" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.32.31_PM.png"><img style="width:707.9921875px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.32.31_PM.png"/></a></figure><p id="1450aaf5-eccb-8063-903a-d3e88f466dbc" class="">
+</p><p id="1450aaf5-eccb-8081-bbad-fe460be10a7e" class="">Here are the sample results after the 1st and 5th epoch. The first column is the original MNIST image. The second column is the noisy image (sigma = 0.5) that is actually passed into our UNet model. Lastly, the third column is the reconstructed image from the output of our UNet model. </p><p id="1450aaf5-eccb-80dd-81da-d18a68f56362" class="">For the output after the first epoch, we can still see artifacts and a drop in quality for our output.</p><figure id="1450aaf5-eccb-8021-a0b3-e05c53d06905" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.34.57_PM.png"><img style="width:707.9921875px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.34.57_PM.png"/></a></figure><p id="1450aaf5-eccb-80f0-9d7b-e9146cd046fc" class="">After the 5th epoch, we see much better results where our output from the UNet allows us to reconstruct a much closer image to our original.</p><figure id="1450aaf5-eccb-80ce-b909-dac72e69db37" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.38.32_PM.png"><img style="width:707.9921875px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.38.32_PM.png"/></a></figure><p id="1450aaf5-eccb-809f-b790-e8361bfd9683" class=""><strong>1.2.2 Out-of-Distribution Testing</strong></p><p id="1450aaf5-eccb-8043-a993-f96f82e2c54c" class="">So far, we have only looked at images that have noise at sigma = 0.5, but can this model generalize to other sigma values? Looking at the same seven from before, we can feed different level of noise into the model and see how its able to handle it.</p><figure id="1450aaf5-eccb-800d-95f7-f7d91dace004" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.30.16_PM.png"><img style="width:707.9296875px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.30.16_PM.png"/></a></figure><figure id="1450aaf5-eccb-8099-bb57-f8fdfc11a038" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.40.53_PM.png"><img style="width:2794px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.40.53_PM.png"/></a></figure><p id="1450aaf5-eccb-80fc-be27-ef34163db7a9" class="">For the first three sigma values, we see relatively similar outputs; however for the last three we can see more artifacts and incoherency in the output.</p><h3 id="1450aaf5-eccb-808e-a231-fe1cd4a4e28a" class=""><strong>Part 2: Training a Diffusion Model</strong></h3><p id="1450aaf5-eccb-805b-924e-cf47cedff235" class="">While a UNet is able to give us the power to reconstruct our original image even with noise applied, our goal was to train a diffusion model. For the UNet, we used an MSE Loss between the predicted image and the original image, but we can actually rewrite this equation equivalently as:</p><figure id="1450aaf5-eccb-809f-9fd6-cd4847c8796d" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.44.54_PM.png"><img style="width:192px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.44.54_PM.png"/></a></figure><p id="1450aaf5-eccb-80a8-81ae-ff28e3707e81" class="">Here, we see that we are taking the MSE Loss between the model’s output and pure sampled noise, allowing us to estimate the noise from pure noise like we did in the first part.</p><p id="1450aaf5-eccb-80ec-9a35-e7d64e003f71" class=""><strong>2.1 Adding Time Conditioning to UNet</strong></p><p id="1450aaf5-eccb-8030-a759-e4b6f9f2cb81" class="">We are introducing the idea of conditioning our original UNet model with time, mimicking the behavior of the model we used in the Part A.</p><figure id="1450aaf5-eccb-8092-b641-d35db1eedc49" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.47.51_PM.png"><img style="width:2140px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.47.51_PM.png"/></a></figure><p id="1450aaf5-eccb-80ba-843f-e228888ae18f" class="">
+</p><p id="1450aaf5-eccb-8007-8753-ea5cb993cb0d" class=""><strong>2.2 Training the UNet</strong></p><p id="1450aaf5-eccb-8052-82e8-fa0354f85bb6" class="">We want to make edits to our training loop to accommodate for the new t parameter that we will be iterating through to yield our conditioned results. For the training, we are using a dataloader with a batch size of 128, UNet with 64 hidden dimensions, 20 epochs of training time, and an exponential learning rate decay scheduler in addition to the Adam optimizer that we have been using. The initial learning rate if 1e-3. With this setup, I was able to get the following training losses, showing us very quick convergence. Throughout the training process, there was model checkpointing, which will be apparent as to the reason in the next section.</p><figure id="1450aaf5-eccb-80fc-b335-d09d9c966d16" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.49.37_PM.png"><img style="width:707.9921875px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.49.37_PM.png"/></a></figure><p id="1450aaf5-eccb-803e-9825-dac6ad9ff63e" class=""><strong>2.3 Sampling from the UNet</strong></p><p id="1450aaf5-eccb-802f-a226-fcb50ccf30f5" class="">Now that we have trained the model, we can look at the sampling outputs from the model at different points during the training process. Below are two specific model checkpoints: after the 5th epoch and after the 20th epoch.</p><figure id="1450aaf5-eccb-80d1-be37-c6ee4b306a86" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.50.13_PM.png"><img style="width:2778px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.50.13_PM.png"/></a></figure><p id="1450aaf5-eccb-80b2-944a-f842cf948848" class="">
+</p><figure id="1450aaf5-eccb-800f-b88c-f7f92ac2087f" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.50.37_PM.png"><img style="width:2784px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.50.37_PM.png"/></a></figure><p id="1450aaf5-eccb-808b-b55d-d942262bc198" class="">For each of the 40 images sampled, I set a unique random number and had both models output one sample based on a batch of time steps. From these two sets of images, we can tell that after 20 epochs that the model definitely did better with some of its inputs, but the amount of improvement isn’t extremely apparent. In other words, the sampling outputs are still not the best even after training for all 20 epochs. How can we fix this? We can try conditioning on another input: class.</p><p id="1450aaf5-eccb-808f-835c-c2fb4d6de85c" class="">
+</p><p id="1450aaf5-eccb-8033-9309-e0484400beba" class=""><strong>2.4 Adding Class-Conditioning to UNet</strong></p><p id="1450aaf5-eccb-80fc-9afe-d52ba5bd5d76" class="">From the sampling results of the time-conditioned model, we can notice that the model struggled to properly generate any one of the numbers in certain cases. Sometime the output was very non-sensical. To combat this issue and just generally improve our output from the model to match the dataset more, we can use our unused class labels as another indicator.</p><figure id="1450aaf5-eccb-801c-bce4-de64c91daae0" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_12.06.15_AM.png"><img style="width:707.9921875px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-21_at_12.06.15_AM.png"/></a></figure><p id="1450aaf5-eccb-80c1-9a62-ddb83704060f" class="">For class conditioning, we need to add more fully connected blocks that will integrate into the same places as the time we added earlier as one way to condition on both. From there, we want to edit our forward and sampling loops to introduce the new variable. In the forward function of the model, we need to transform our integer classes into a one-hot encoded vector that we can use in our calculations. We’d also like to introduce a dropout feature for each of our labels so the model doesn’t overfit to that input. We will be using a dropout probability of 0.1, meaning on average 10% of all labels in a batch will be zeroed out for our calculations. </p><p id="1450aaf5-eccb-80ef-bb2f-f0a938c5a1e0" class="">For the sampling, we need a way to account for this dropout, so we will be utilizing a technique from the first part called CFG, which significantly improved our results. We can combine our class conditional output with our unconditional output to get our final noise estimate.</p><p id="1450aaf5-eccb-80c5-97c9-c928aa210734" class="">The training process uses the same parameters as the case for time conditioning, resulting in the curve below.</p><figure id="1450aaf5-eccb-8043-aef8-f3462e0ed8aa" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.51.10_PM.png"><img style="width:707.984375px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.51.10_PM.png"/></a></figure><p id="1450aaf5-eccb-800e-a14d-c961ac78c224" class="">
+</p><p id="1450aaf5-eccb-8016-90a2-e1fa17a65e60" class=""><strong>2.5 Sampling from the Class-Conditioned UNet</strong></p><p id="1450aaf5-eccb-80cc-a39e-f3fcc3600a77" class="">Similar to before, let’s sample our model at different checkpoints throughout the training process to see how the model converges. For the same points (after the 5th and 20th epochs), we get the following output. Here, the same random seeds were used for both checkpoints, so that we can directly compare the results here. The main points we can see here is that the results from the 5th to the 20th epoch don’t fluctuate as much, meaning our model converged faster. The differences that are visible are removal of some artifacts that are present in the first set, but generally, the sampling has very similar results for both checkpoints.</p><figure id="1450aaf5-eccb-804e-8fca-d3b0b30131e6" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.51.29_PM.png"><img style="width:2784px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.51.29_PM.png"/></a></figure><p id="1450aaf5-eccb-80a3-81d0-caa9e553da1c" class="">
+</p><figure id="1450aaf5-eccb-80d3-9a65-ea9712e93afb" class="image"><a href="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.51.54_PM.png"><img style="width:707.9921875px" src="Project%205%20Fun%20With%20Diffusion%20Models!%201450aaf5eccb80cd9492e1972e70d39a/Screenshot_2024-11-20_at_11.51.54_PM.png"/></a></figure><p id="1450aaf5-eccb-8029-8e27-fc5dd89a7ab7" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
